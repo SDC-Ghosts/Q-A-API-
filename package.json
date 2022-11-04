@@ -1,0 +1,19 @@
+{
+  "name": "sdc-qanda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server-dev": "npx nodemon --watch server Primary-db-server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SDC-Ghosts/SDC-QandA.git"
+  },
+  "author": "Taylor Sheets",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SDC-Ghosts/SDC-QandA/issues"
+  },
+  "homepage": "https://github.com/SDC-Ghosts/SDC-QandA#readme"
+}
