@@ -1,3 +1,4 @@
 node_modules/
 .env
-App-data/*
+App-data/
+
