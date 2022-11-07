@@ -9,8 +9,8 @@ Create TABLE questions (
   date_written varchar(25),
   asker_name varchar(60),
   asker_email varchar(60),
-  helpful int,
   reported TINYINT DEFAULT 0,
+  helpful int DEFAULT 0,
   primary key (id)
 );
 
@@ -22,7 +22,7 @@ Create TABLE answers (
   answerer_name varchar(60),
   answerer_email varchar(60),
   reported TINYINT DEFAULT 0,
-  helpful int,
+  helpful int DEFAULT 0,
   primary key (id),
   foreign key (question_id) references questions (id)
 );
@@ -35,19 +35,19 @@ Create TABLE photos (
   foreign key (answer_id) references answers (id)
 );
 
-LOAD DATA LOCAL INFILE "../App-data/questions.csv" INTO TABLE questions
+LOAD DATA LOCAL INFILE "/Users/taylorsheets/SDC-QandA/App-data/questions.csv" INTO TABLE questions
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(id, product_id, question_body, date_written, asker_name, asker_email, helpful, reported);
+(id, product_id, question_body, date_written, asker_name, asker_email, reported, helpful);
 
-LOAD DATA LOCAL INFILE "../App-data/answers.csv" INTO TABLE answers
+LOAD DATA LOCAL INFILE "/Users/taylorsheets/SDC-QandA/App-data/answers.csv" INTO TABLE answers
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful);
 
-LOAD DATA LOCAL INFILE "../App-data/answers_photos.csv" INTO TABLE photos
+LOAD DATA LOCAL INFILE "/Users/taylorsheets/SDC-QandA/App-data/answers_photos.csv" INTO TABLE photos
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES

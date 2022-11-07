@@ -14,3 +14,5 @@ const db = Promise.promisifyAll(connection, {multiArgs: true});
 db.connectAsync()
   .then(() => console.log(`Connected to MySQL as id: ${db.threadId}`))
   .catch((err) => console.log(err));
+
+module.exports = db;
