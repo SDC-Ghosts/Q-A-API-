@@ -14,6 +14,8 @@ Create TABLE questions (
   primary key (id)
 );
 
+CREATE INDEX index_product_id ON questions(product_id);
+
 Create TABLE answers (
   id int not null auto_increment,
   question_id int,
