@@ -29,6 +29,7 @@ app.post('/qa/questions', (req, res) => {
 })
 
 app.post('/qa/questions/*/answers', (req, res) => {
+  console.log(req.body);
   models.postAnswers(req.body, req.url, res);
 })
 

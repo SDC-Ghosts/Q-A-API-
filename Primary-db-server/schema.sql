@@ -24,7 +24,7 @@ Create TABLE answers (
   answerer_name varchar(60),
   answerer_email varchar(60),
   reported TINYINT DEFAULT 0,
-  helpful int DEFAULT 0,
+  helpful int not null DEFAULT 0,
   primary key (id),
   foreign key (question_id) references questions (id)
 );

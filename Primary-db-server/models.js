@@ -8,25 +8,16 @@ module.exports = {
     db.queryAsync(`SELECT id as question_id, JSON_UNQUOTE(question_body) as question_body, date_written, JSON_UNQUOTE(asker_name) as asker_name, helpful from questions where product_id=${product_id} AND reported = 0 ORDER BY helpful desc;`)
       .then((results) => {
         let questions = results[0];
-        let data = [];
-        questions.forEach(question => {
-          question.answers = {}
-          data.push(question.question_id.toString())
-        });
-        let queryData = [data];
-        db.queryAsync('SELECT id as answer_id, question_id, JSON_UNQUOTE(body) as body, date_written, JSON_UNQUOTE(answerer_name) AS answerer_name, helpful from answers where question_id in (?) AND reported=0 ORDER BY helpful desc;', queryData)
+
+        db.queryAsync(`SELECT id as answer_id, question_id, JSON_UNQUOTE(body) as body, date_written, JSON_UNQUOTE(answerer_name) AS answerer_name, helpful from answers where question_id in (select id from questions where product_id=${product_id}) AND reported=0 ORDER BY helpful desc;`)
           .then((results) => {
             let answers = results[0];
-            let data = [];
-            answers.forEach(answer => {
-              answer.photos = [];
-              data.push(answer.answer_id);
-            });
-            let queryData = [data];
-            db.queryAsync('select answer_id, JSON_UNQUOTE(url) as url from photos where answer_id IN (?);', queryData)
+
+            db.queryAsync(`select answer_id, JSON_UNQUOTE(url) as url from photos where answer_id IN (SELECT id from answers where question_id in (select id from questions where product_id=${product_id}));`)
               .then((results) => {
                 let photos = results[0];
                 for (let i = 0; i < answers.length; i ++) {
+                  answers[i].photos = [];
                   for (let j = 0; j < photos.length; j ++) {
                     if (photos[j].answer_id === answers[i].answer_id) {
                       answers[i].photos.push(photos[j].url);
@@ -34,6 +25,7 @@ module.exports = {
                   }
                 }
                 for (let i = 0; i < questions.length; i ++) {
+                  questions[i].answers = {};
                   for (let j = 0; j < photos.length; j ++) {
                     if (answers[j].question_id === questions[i].question_id) {
                       questions[i].answers[answers[j].answer_id] = answers[j];
@@ -42,7 +34,7 @@ module.exports = {
                 }
                 res.send(questions);
               })
-              .catch((err) => console.log('questions, answers, photos ', questions, answers, photos));
+              .catch((err) => console.log('results ', results));
           })
       })
   },
@@ -55,12 +47,11 @@ module.exports = {
     db.queryAsync(`SELECT * FROM answers where question_id=${question_id}`)
       .then((response) => {
         console.log('response', response[0]);
-      })
-      .then(() => res.send('GET request received'));
+        res.send(response[0]);
+      });
   },
   //POST
   postQuestions: (req, res) => {
-    console.log('model accessed, POST request received');
     const { body, name, email, product_id } = req;
     const date = new Date();
     let queryString = 'INSERT INTO questions(product_id, question_body, date_written, asker_name, asker_email) VALUES(?, ?, ?, ?, ?);';
@@ -72,11 +63,10 @@ module.exports = {
   },
 
   postAnswers: (req, url, res) => {
-    console.log('model accessed, POST request received');
     const { body, name, email, photos } = req;
+    console.log(body, photos);
     const question_id = url.slice(14, url.length - 8);
     const date = new Date();
-    const firstInsertData = [question_id, body, date.toISOString(), name, email]
 
     let queryString = 'INSERT INTO answers(question_id, body, date_written, answerer_name, answerer_email) VALUES (?, ?, ?, ?, ?);';
 
@@ -84,7 +74,6 @@ module.exports = {
       .then((response) => {
         const answerId = response[0].insertId;
         let queryString = 'INSERT INTO photos(answer_id, url) values(?, ?);'
-
         for (let i = 0; i < photos.length; i ++) {
           db.query(queryString, [answerId, photos[i]]);
         }
@@ -96,7 +85,6 @@ module.exports = {
   },
   //HELPFUL
   helpfulQuestions: (url, res) => {
-    console.log('model accessed, PUT request received');
     const question_id = url.slice(14, url.length - 8);
     db.queryAsync(`UPDATE questions SET helpful=helpful+1 WHERE id=${question_id};`)
       .then(() => {
@@ -106,7 +94,6 @@ module.exports = {
   },
 
   helpfulAnswers: (url, res) => {
-    console.log('model accessed, PUT request received');
     const answer_id = url.slice(12, url.length - 8);
     db.queryAsync(`UPDATE answers SET helpful=helpful+1 WHERE id=${answer_id};`)
       .then(() => {
@@ -116,7 +103,6 @@ module.exports = {
   },
   //REPORT
   reportQuestions: (url, res) => {
-    console.log('model accessed, PUT request received');
     const question_id = url.slice(14, url.length - 7);
     db.queryAsync(`UPDATE questions SET reported=1 WHERE id=${question_id};`)
       .then(() => {
@@ -126,7 +112,6 @@ module.exports = {
   },
 
   reportAnswers: (url, res) => {
-    console.log('model accessed, PUT request received');
     const answer_id = url.slice(12, url.length - 7);
     db.queryAsync(`UPDATE answers SET reported=1 WHERE id=${answer_id};`)
       .then(() => {

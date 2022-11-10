@@ -3,12 +3,7 @@ import { URL } from 'https://jslib.k6.io/url/1.0.0/index.js';
 import { check } from 'k6';
 
 export default function() {
-  const url = 'http://localhost:3000/qa/questions/?product_id=40350';
-  // const params = {
-  //   query: {
-  //     product_id: 40350,
-  //   }
-  // }
+  const url = 'http://localhost:3000/qa/questions?product_id=40350';
 
 
   const response = http.get(url);
@@ -18,7 +13,7 @@ export default function() {
 }
 
 export let options = {
-  vus: 1024,
+  vus: 1,
   duration: '30s',
   // thresholds: {
   //     'failed requests': ['rate<0.02'],
