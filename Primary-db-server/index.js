@@ -3,6 +3,7 @@ const express=require("express");
 const path = require("path");
 const db = require("./db.js");
 const models = require("./models.js");
+const loaderIO = require("./loaderio-3e9195f47f12e47fd9d31aca6a49fd87.txt")
 
 const app = express();
 
@@ -12,6 +13,10 @@ app.listen(process.env.PORT);
 console.log(`Listening at http://localhost:${process.env.PORT}`);
 
 
+
+app.all('loaderio-3e9195f47f12e47fd9d31aca6a49fd87.txt', (req, res) =>
+  res.send(loaderIO);
+)
 // ROUTER FUNCTIONS
 //GET
 app.get('/qa/questions', (req, res) => {
