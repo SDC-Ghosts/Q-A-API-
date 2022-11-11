@@ -3,6 +3,7 @@ const express=require("express");
 const path = require("path");
 const db = require("./db.js");
 const models = require("./models.js");
+const morgan = require("morgan");
 
 const app = express();
 
@@ -12,44 +13,44 @@ app.listen(process.env.PORT);
 console.log(`Listening at http://localhost:${process.env.PORT}`);
 
 
-app.get('/loaderio-3e9195f47f12e47fd9d31aca6a49fd87.html', (req, res) => {
+app.get('/loaderio-3e9195f47f12e47fd9d31aca6a49fd87.html', morgan('tiny'), (req, res) => {
   res.send('loaderio-3e9195f47f12e47fd9d31aca6a49fd87');
 })
 // ROUTER FUNCTIONS
 //GET
-app.get('/qa/questions', (req, res) => {
+app.get('/qa/questions', morgan('tiny'), (req, res) => {
   models.getQuestions(req.query, res);
 })
 
-app.get('/qa/questions/*/answers', (req, res) => {
+app.get('/qa/questions/*/answers', morgan('tiny'), (req, res) => {
   models.getAnswers(req.query, req.url, res);
 
 })
 
 //POST
-app.post('/qa/questions', (req, res) => {
+app.post('/qa/questions', morgan('tiny'), (req, res) => {
   models.postQuestions(req.body, res);
 })
 
-app.post('/qa/questions/*/answers', (req, res) => {
+app.post('/qa/questions/*/answers', morgan('tiny'), (req, res) => {
   console.log(req.body);
   models.postAnswers(req.body, req.url, res);
 })
 
 //PUT - HELPFUL
-app.put('/qa/questions/*/helpful', (req, res) => {
+app.put('/qa/questions/*/helpful', morgan('tiny'), (req, res) => {
   models.helpfulQuestions(req.url, res);
 })
 
-app.put('/qa/answers/*/helpful', (req, res) => {
+app.put('/qa/answers/*/helpful', morgan('tiny'), (req, res) => {
   models.helpfulAnswers(req.url, res);
 })
 
 //PUT - REPORT
-app.put('/qa/questions/*/report', (req, res) => {
+app.put('/qa/questions/*/report', morgan('tiny'), (req, res) => {
   models.reportQuestions(req.url, res);
 })
 
-app.put('/qa/answers/*/report', (req, res) => {
+app.put('/qa/answers/*/report', morgan('tiny'), (req, res) => {
   models.reportAnswers(req.url, res);
 })
