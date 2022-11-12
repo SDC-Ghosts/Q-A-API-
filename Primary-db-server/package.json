@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server-dev": "npx nodemon --watch index.js",
+    "lb" : "npx nodemon --watch SDC_loadbalancer.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
