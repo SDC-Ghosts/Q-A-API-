@@ -13,8 +13,8 @@ app.listen(process.env.PORT);
 console.log(`Listening at http://localhost:${process.env.PORT}`);
 
 
-app.get('/loaderio-3e9195f47f12e47fd9d31aca6a49fd87.html', morgan('tiny'), (req, res) => {
-  res.send('loaderio-3e9195f47f12e47fd9d31aca6a49fd87');
+app.get('/loaderio-36c4877f13696ea7284fb9e27fd288b2.html', (req, res) => {
+  res.send('loaderio-36c4877f13696ea7284fb9e27fd288b2');
 })
 // ROUTER FUNCTIONS
 //GET
